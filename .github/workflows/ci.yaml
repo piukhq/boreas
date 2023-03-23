@@ -1,0 +1,118 @@
+name: ci
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  release:
+    types: [published]
+
+jobs:
+  tests:
+    name: tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: fs
+          scan-ref: "."
+          security-checks: "vuln"
+          vuln-type: library
+          ignore-unfixed: true
+          exit-code: 0
+          severity: UNKNOWN,LOW,MEDIUM
+      - uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: fs
+          scan-ref: "."
+          security-checks: "vuln"
+          vuln-type: library
+          ignore-unfixed: true
+          exit-code: 1
+          severity: HIGH,CRITICAL
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v2
+        with:
+          python-version: "3.10"
+      - run: pip install poetry
+      - run: poetry config virtualenvs.create false
+      - run: poetry install
+      - run: pytest --verbose --cov app --cov-report=xml --junitxml=report.xml tests
+      - run: xenon --max-average A --max-modules B --max-absolute B .
+      - run: mypy app --ignore-missing-imports --follow-imports skip
+      - run: flake8 .
+      - run: black --line-length=120 --check .
+      - run: isort --check --line-length 120 --profile black .
+
+  release_dev:
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+    name: release_dev
+    environment: Development
+    runs-on: ubuntu-latest
+    needs: [tests]
+    steps:
+      - uses: actions/checkout@v2
+      - run: echo "::set-output name=date::$(date +'%FT%H%M%SZ')"
+        id: date
+      - uses: docker/login-action@v1
+        with:
+          registry: binkcore.azurecr.io
+          username: binkcore
+          password: ${{ secrets.ACR_BINKCORE_PASSWORD }}
+      - uses: docker/build-push-action@v2
+        with:
+          push: true
+          tags: |
+            binkcore.azurecr.io/${{ github.event.repository.name }}:${{ steps.date.outputs.date }}
+            binkcore.azurecr.io/${{ github.event.repository.name }}:latest
+      - uses: docker/build-push-action@v2
+        with:
+          push: true
+          tags: |
+            binkcore.azurecr.io/${{ github.event.repository.name }}:harness-${{ steps.date.outputs.date }}
+  release_staging:
+    if: github.event_name == 'release' && github.event.action == 'published'
+    name: release_staging
+    environment: Staging
+    runs-on: ubuntu-latest
+    needs: [tests]
+    steps:
+      - uses: actions/checkout@v2
+      - name: tag_check
+        run: |
+          if ! [[ ${{ github.event.release.tag_name }} =~ [0-9]+.[0-9]+.[0-9]+ ]]; then
+            exit 1;
+          fi
+      - uses: docker/login-action@v1
+        with:
+          registry: binkcore.azurecr.io
+          username: binkcore
+          password: ${{ secrets.ACR_BINKCORE_PASSWORD }}
+      - uses: docker/build-push-action@v2
+        with:
+          push: true
+          tags: |
+            binkcore.azurecr.io/${{ github.event.repository.name }}:${{ github.event.release.tag_name }}
+            binkcore.azurecr.io/${{ github.event.repository.name }}:staging-${{ github.event.release.tag_name }}
+            binkcore.azurecr.io/${{ github.event.repository.name }}:staging
+  release_production:
+    if: github.event_name == 'release' && github.event.action == 'published'
+    name: release_production
+    environment: Production
+    needs: [release_staging]
+    runs-on: ubuntu-latest
+    container: ghcr.io/binkhq/tagbot:latest
+    steps:
+      - run: |-
+          tagbot \
+            --username binkcore \
+            --password ${{ secrets.ACR_BINKCORE_PASSWORD }} \
+            --source binkcore.azurecr.io/${{ github.event.repository.name }}:${{ github.event.release.tag_name }} \
+            --tag prod-${{ github.event.release.tag_name }}
+          tagbot \
+            --username binkcore \
+            --password ${{ secrets.ACR_BINKCORE_PASSWORD }} \
+            --source binkcore.azurecr.io/${{ github.event.repository.name }}:${{ github.event.release.tag_name }} \
+            --tag prod
