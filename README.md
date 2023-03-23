@@ -1,5 +1,5 @@
-# Harmonia Transactions API 
-Harmonia Transactions API is a simple service allowing Harmonia to accept transactions from merchants via an API.
+# Boreas
+Boreas is a simple service enabling Harmonia to accept transactions from merchants via an API.
 
 ### Pre-requisites
 * Python >= 3.10
