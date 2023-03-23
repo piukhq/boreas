@@ -6,8 +6,8 @@ from fastapi.openapi.models import APIKey
 from kombu import Connection
 from starlette.responses import JSONResponse
 
-import app.message_queue
 import settings
+from app import message_queue
 from app.exceptions import InvalidTokenError
 from app.security import get_api_key
 
