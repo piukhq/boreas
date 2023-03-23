@@ -1,6 +1,6 @@
 FROM ghcr.io/binkhq/python:3.10
 
-WORKDIR /app
+WORKDIR /
 
 RUN pip install poetry
 RUN poetry config virtualenvs.create false
