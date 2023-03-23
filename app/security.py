@@ -4,7 +4,7 @@ import settings
 from azure.core.exceptions import HttpResponseError
 from azure.identity import DefaultAzureCredential
 from azure.keyvault.secrets import SecretClient
-from exceptions import InvalidTokenError
+from app.exceptions import InvalidTokenError
 from fastapi import Security
 from fastapi.security import APIKeyHeader
 from tenacity import retry, stop_after_attempt, wait_exponential
