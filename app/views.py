@@ -1,14 +1,15 @@
 from typing import Dict, List
 
-import app.message_queue
-import settings
-from app.exceptions import InvalidTokenError
 from fastapi import APIRouter, Depends, FastAPI, Response
 from fastapi.exceptions import RequestValidationError
 from fastapi.openapi.models import APIKey
 from kombu import Connection
-from app.security import get_api_key
 from starlette.responses import JSONResponse
+
+import app.message_queue
+import settings
+from app.exceptions import InvalidTokenError
+from app.security import get_api_key
 
 root_app = FastAPI(title="Harmonia Transactions API", openapi_url="/openapi.json")
 

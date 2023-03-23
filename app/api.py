@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+
 from app.views import api_router, root_app
 
 

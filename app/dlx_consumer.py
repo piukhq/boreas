@@ -2,8 +2,9 @@ import logging
 from typing import Any, Type
 
 import kombu
-import settings
 from kombu.mixins import ConsumerMixin
+
+import settings
 
 MAX_RESEND = 3
 

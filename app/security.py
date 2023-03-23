@@ -1,13 +1,14 @@
 from functools import cache
 
-import settings
 from azure.core.exceptions import HttpResponseError
 from azure.identity import DefaultAzureCredential
 from azure.keyvault.secrets import SecretClient
-from app.exceptions import InvalidTokenError
 from fastapi import Security
 from fastapi.security import APIKeyHeader
 from tenacity import retry, stop_after_attempt, wait_exponential
+
+import settings
+from app.exceptions import InvalidTokenError
 
 api_key_header = APIKeyHeader(name="x-api-key", auto_error=False)
 
