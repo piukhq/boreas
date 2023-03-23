@@ -1,0 +1,38 @@
+[tool.poetry]
+name = "harmonia-transaction-api"
+version = "0.1.0"
+description = ""
+authors = ["Michal Jozwiak <mjozwiak@bink.com>"]
+readme = "README.md"
+packages = [{include = "harmonia_transaction_api"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.94.1"
+uvicorn = "^0.21.0"
+pydantic = "^1.10.6"
+kombu = "^5.2.4"
+azure-identity = "^1.12.0"
+azure-keyvault-secrets = "^4.6.0"
+tenacity = "^8.2.2"
+flake8 = "^6.0.0"
+isort = "^5.12.0"
+mypy = "^1.1.1"
+black = "^23.1.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+
+[tool.black]
+line-length = 120
+
+[tool.isort]
+profile = "black"
+line_length = 120
+
+[tool.mypy]
+ignore_missing_imports = true
+no_site_packages = true
