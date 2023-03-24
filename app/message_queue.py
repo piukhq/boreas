@@ -18,7 +18,6 @@ def add(message: dict, *, merchant_id: str, connection: Connection) -> None:
     transactions_queue = Queue(
         queue_name,
         queue_arguments={
-            "x-max-length": 1,
             "x-dead-letter-routing-key": dl_queue_name,
             "x-dead-letter-exchange": dl_exchange_name,
         },
