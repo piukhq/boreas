@@ -7,8 +7,8 @@ from fastapi import Security
 from fastapi.security import APIKeyHeader
 from tenacity import retry, stop_after_attempt, wait_exponential
 
-import settings
-from app.exceptions import InvalidTokenError
+import boreas.settings as settings
+from boreas.exceptions import InvalidTokenError
 
 api_key_header = APIKeyHeader(name="x-api-key", auto_error=False)
 

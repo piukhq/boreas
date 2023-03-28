@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from app.views import api_router, root_app
+from boreas.views import api_router, root_app
 
 
 def create_app() -> FastAPI:

@@ -6,10 +6,10 @@ from fastapi.openapi.models import APIKey
 from kombu import Connection
 from starlette.responses import JSONResponse
 
-import settings
-from app import message_queue
-from app.exceptions import InvalidTokenError
-from app.security import get_api_key
+import boreas.settings as settings
+from boreas import message_queue
+from boreas.exceptions import InvalidTokenError
+from boreas.security import get_api_key
 
 root_app = FastAPI(title="Harmonia Transactions API", openapi_url="/openapi.json")
 

@@ -4,7 +4,7 @@ from typing import Any, Type
 import kombu
 from kombu.mixins import ConsumerMixin
 
-import settings
+import boreas.settings as settings
 
 MAX_RESEND = 3
 

@@ -1,14 +1,14 @@
+FROM ghcr.io/binkhq/python:3.10-poetry as build
+WORKDIR /src
+ADD . .
+RUN poetry build
+
 FROM ghcr.io/binkhq/python:3.10
+WORKDIR /app
+COPY --from=build /src/dist/*.whl .
 
-WORKDIR /
-
-RUN pip install poetry
-RUN poetry config virtualenvs.create false
-
-COPY . .
-
-RUN poetry install
+RUN pip install *.whl && rm *.whl
+COPY --from=build /src/asgi.py .
 
 ENTRYPOINT [ "linkerd-await", "--" ]
 CMD ["uvicorn", "asgi:app", "--host 0.0.0.0", "--port", "8001"]
-CMD ["python", "app/dlx_consumer.py"]
