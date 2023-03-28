@@ -66,11 +66,6 @@ jobs:
           tags: |
             binkcore.azurecr.io/${{ github.event.repository.name }}:${{ env.container_tag }}
             binkcore.azurecr.io/${{ github.event.repository.name }}:latest
-      - uses: docker/build-push-action@v4
-        with:
-          push: true
-          tags: |
-            binkcore.azurecr.io/${{ github.event.repository.name }}:harness-${{ env.container_tag }}
   release_staging:
     if: github.event_name == 'release' && github.event.action == 'published'
     name: release_staging
