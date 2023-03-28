@@ -12,4 +12,4 @@ COPY --from=build /src/asgi.py .
 COPY --from=build /src/boreas/dlx_consumer.py .
 
 ENTRYPOINT [ "linkerd-await", "--" ]
-CMD ["uvicorn", "asgi:app", "--host 0.0.0.0", "--port", "8001"]
+CMD ["uvicorn", "asgi:app", "--host", "0.0.0.0", "--port", "8001"]
