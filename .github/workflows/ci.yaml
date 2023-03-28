@@ -41,7 +41,7 @@ jobs:
       - run: poetry install
       - run: pytest --verbose --cov app --cov-report=xml --junitxml=report.xml tests
       - run: xenon --max-average A --max-modules B --max-absolute B .
-      - run: mypy app --ignore-missing-imports --follow-imports skip
+      - run: mypy boreas --ignore-missing-imports --follow-imports skip
       - run: flake8 .
       - run: black --line-length=120 --check .
       - run: isort --check --line-length 120 --profile black .
