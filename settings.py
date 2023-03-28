@@ -21,7 +21,7 @@ def boolconv(s: str) -> bool:
     return s.lower() in ["true", "t", "yes"]
 
 
-KEYVAULT_URI = getenv("KEYVAULT_URI", required=True, default="https://bink-uksouth-dev-com.vault.azure.net/")
+KEYVAULT_URI = getenv("KEYVAULT_URI", required=True)
 
 RABBITMQ_USER = getenv("RABBITMQ_USER", required=True, default="guest")
 RABBITMQ_PASS = getenv("RABBITMQ_PASS", required=True, default="guest")
@@ -29,4 +29,4 @@ RABBITMQ_HOST = getenv("RABBITMQ_HOST", required=True, default="localhost")
 RABBITMQ_PORT = getenv("RABBITMQ_PORT", required=True, conv=int, default="5672")
 RABBITMQ_DSN = getenv("AMQP_DSN", f"amqp://{RABBITMQ_USER}:{RABBITMQ_PASS}@{RABBITMQ_HOST}:{RABBITMQ_PORT}//")
 
-ACTIVE_MERCHANTS = ["costa", "squaremeal"]
+ACTIVE_MERCHANTS = ["costa", "test-retailer"]

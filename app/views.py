@@ -23,7 +23,7 @@ async def invalid_token_exc_handler(request, exc: InvalidTokenError):
 
 @root_app.exception_handler(RequestValidationError)
 async def unprocessable_entity_handler(request, exc: RequestValidationError):
-    return JSONResponse(status_code=422, content={"error_message": "Invalid JSON", "error_slug": "MALFORMED_REQUEST"})
+    return JSONResponse(status_code=400, content={"error_message": "Invalid JSON", "error_slug": "MALFORMED_REQUEST"})
 
 
 @api_router.post("/{merchant_id}/transactions")
