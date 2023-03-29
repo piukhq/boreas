@@ -18,7 +18,7 @@ use a tool like [direnv](https://direnv.net/).
 
 ### Running the Project
 ```bash
-uvicorn asgi:app --host 0.0.0.0 --port 8001
+uvicorn asgi:app --host 0.0.0.0 --port 9000
 python dlx_consumer.py
 ```
 
