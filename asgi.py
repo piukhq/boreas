@@ -1,6 +1,4 @@
-from boreas.api import create_app
-
-app = create_app()
+from boreas.views import app
 
 if __name__ == "__main__":
     # Use this for debugging purposes only

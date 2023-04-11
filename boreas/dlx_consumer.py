@@ -4,17 +4,17 @@ from typing import Any, Type
 import kombu
 from kombu.mixins import ConsumerMixin
 
-import boreas.settings as settings
+from boreas.settings import ACTIVE_RETAILERS, settings
 
 MAX_RESEND = 3
 
-log = logging.getLogger("harmonia-transactions-dead-letter-consumer")
+log = logging.getLogger("dead-letter-consumer")
 
 
 class DeadLetterConsumer(ConsumerMixin):
     @staticmethod
     def make_queues():
-        return [kombu.Queue(name=f"{merchant_id}-dl-queue") for merchant_id in settings.ACTIVE_MERCHANTS]
+        return [kombu.Queue(name=f"{retailer_id}-dl-queue") for retailer_id in ACTIVE_RETAILERS]
 
     def __init__(self, connection: kombu.Connection) -> None:
         self.connection = connection
@@ -25,7 +25,7 @@ class DeadLetterConsumer(ConsumerMixin):
     def on_message(self, body: dict, message: kombu.Message) -> None:  # pragma: no cover
         headers = message.headers
         resend_count = headers["x-death"][0]["count"]
-        merchant_id = headers["x-provider"]
+        retailer_id = headers["x-provider"]
         if resend_count > MAX_RESEND:
             log.debug(
                 f"Message for transaction {body['transaction_id']} not delivered to Harmonia "
@@ -40,12 +40,12 @@ class DeadLetterConsumer(ConsumerMixin):
             )
             producer = self.connection.Producer(serializer="json")
             producer.publish(
-                body, headers=message.headers, routing_key=f"{merchant_id}-transactions", properties={"x-delay": delay}
+                body, headers=message.headers, routing_key=f"{retailer_id}-transactions", properties={"x-delay": delay}
             )
 
 
 def main():
-    with kombu.Connection(settings.RABBITMQ_DSN) as conn:
+    with kombu.Connection(settings.rabbitmq_dsn) as conn:
         consumer = DeadLetterConsumer(conn)
         consumer.run()
 

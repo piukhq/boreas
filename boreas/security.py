@@ -20,11 +20,11 @@ api_key_header = APIKeyHeader(name="x-api-key", auto_error=False)
 )
 @cache
 def load_secrets(secret_name: str):
-    if settings.KEYVAULT_URI is None:
-        raise Exception("Vault Error: settings.KEYVAULT_URI not set")
+    if settings.keyvault_uri is None:
+        raise Exception("Vault Error: settings.keyvault_uri not set")
 
     kv_credential = DefaultAzureCredential()
-    kv_client = SecretClient(vault_url=settings.KEYVAULT_URI, credential=kv_credential)
+    kv_client = SecretClient(vault_url=settings.keyvault_uri, credential=kv_credential)
 
     try:
         return kv_client.get_secret(secret_name).value
@@ -32,8 +32,8 @@ def load_secrets(secret_name: str):
         raise Exception(f"Vault Error: {e}") from e
 
 
-async def get_api_key(merchant_id: str, api_key_header: str = Security(api_key_header)):
-    if api_key_header == load_secrets(f"{merchant_id}-transactions-api-key"):
+async def get_api_key(retailer_id: str, api_key_header: str = Security(api_key_header)):
+    if api_key_header == load_secrets(f"{retailer_id}-transactions-api-key"):
         return api_key_header
     else:
         raise InvalidTokenError()

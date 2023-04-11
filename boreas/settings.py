@@ -1,32 +1,22 @@
 import os
 import typing as t
 
-
-class ConfigVarRequiredError(Exception):
-    pass
+from pydantic import BaseSettings
 
 
-def getenv(key: str, default: str = "", conv: t.Callable = str, required: bool = True) -> t.Any:
-    """If `default` is None, then the var is non-optional."""
-    var = os.getenv(key, default)
-    if var is None and required is True:
-        raise ConfigVarRequiredError(f"Configuration variable '{key}' is required but was not provided.")
-    elif var is not None:
-        return conv(var)
-    else:
-        return None
+class Settings(BaseSettings):
+    keyvault_uri: str | None = None
+    rabbitmq_user: str = "guest"
+    rabbitmq_pass: str = "guest"
+    rabbitmq_host: str = "localhost"
+    rabbitmq_port: int = 5672
+
+    @property
+    def rabbitmq_dsn(self) -> str:
+        return f"amqp://{self.rabbitmq_user}:{self.rabbitmq_pass}@{self.rabbitmq_host}:{self.rabbitmq_port}//"
 
 
-def boolconv(s: str) -> bool:
-    return s.lower() in ["true", "t", "yes"]
+settings = Settings()
 
 
-KEYVAULT_URI = getenv("KEYVAULT_URI", required=True)
-
-RABBITMQ_USER = getenv("RABBITMQ_USER", required=True, default="guest")
-RABBITMQ_PASS = getenv("RABBITMQ_PASS", required=True, default="guest")
-RABBITMQ_HOST = getenv("RABBITMQ_HOST", required=True, default="localhost")
-RABBITMQ_PORT = getenv("RABBITMQ_PORT", required=True, conv=int, default="5672")
-RABBITMQ_DSN = getenv("AMQP_DSN", f"amqp://{RABBITMQ_USER}:{RABBITMQ_PASS}@{RABBITMQ_HOST}:{RABBITMQ_PORT}//")
-
-ACTIVE_MERCHANTS = ["costa", "test-retailer"]
+ACTIVE_RETAILERS = ["costa", "test-retailer"]
