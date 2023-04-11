@@ -7,7 +7,7 @@ from fastapi import Security
 from fastapi.security import APIKeyHeader
 from tenacity import retry, stop_after_attempt, wait_exponential
 
-import boreas.settings as settings
+from boreas.settings import settings
 from boreas.exceptions import InvalidTokenError
 
 api_key_header = APIKeyHeader(name="x-api-key", auto_error=False)
@@ -23,7 +23,12 @@ def load_secrets(secret_name: str):
     if settings.keyvault_uri is None:
         raise Exception("Vault Error: settings.keyvault_uri not set")
 
-    kv_credential = DefaultAzureCredential()
+    kv_credential = DefaultAzureCredential(
+        exclude_environment_credential=True,
+        exclude_shared_token_cache_credential=True,
+        exclude_visual_studio_code_credential=True,
+        exclude_interactive_browser_credential=True,
+    )
     kv_client = SecretClient(vault_url=settings.keyvault_uri, credential=kv_credential)
 
     try:
