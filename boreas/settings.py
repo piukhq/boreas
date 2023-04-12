@@ -1,6 +1,3 @@
-import os
-import typing as t
-
 from pydantic import BaseSettings
 
 

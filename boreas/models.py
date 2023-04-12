@@ -17,12 +17,14 @@ class RetailTransaction(BaseModel):
     metadata: dict | None
     items_ordered: str | None
 
+    @classmethod
     @validator("payment_card_first_six")
     def payment_card_first_six_must_be_6_digits(cls, v: str | None):
         if v and len(v) != 6:
             raise ValueError("must be 6 digits")
         return v
 
+    @classmethod
     @validator("payment_card_last_four")
     def payment_card_last_four_must_be_4_digits(cls, v: str | None):
         if v and len(v) != 4:

@@ -1,5 +1,4 @@
 from fastapi import Depends, FastAPI
-from fastapi.exceptions import RequestValidationError
 from fastapi.openapi.models import APIKey
 from kombu import Connection
 from starlette.responses import JSONResponse
@@ -16,11 +15,6 @@ app = FastAPI(title="Retail Transactions API")
 @app.exception_handler(InvalidTokenError)
 async def invalid_token_exc_handler(request, exc: InvalidTokenError):
     return JSONResponse(status_code=exc.status_code, content=exc.content)
-
-
-@app.exception_handler(RequestValidationError)
-async def unprocessable_entity_handler(request, exc: RequestValidationError):
-    return JSONResponse(status_code=400, content={"error_message": "Invalid JSON", "error_slug": "MALFORMED_REQUEST"})
 
 
 @app.post("/retailers/{retailer_id}/transactions")
