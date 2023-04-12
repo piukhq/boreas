@@ -3,12 +3,11 @@ from unittest.mock import Mock
 import pytest
 from fastapi.testclient import TestClient
 
-from boreas.api import create_app
+from boreas.views import app
 
 
 @pytest.fixture()
 def client():
-    app = create_app()
     yield TestClient(app)
 
 

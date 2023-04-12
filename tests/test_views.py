@@ -17,7 +17,14 @@ def test_post_failed_auth(mock_queue_add, mock_load_secrets, client, transaction
     mock_load_secrets.assert_called_with("test-retailer-transactions-api-key")
     assert not mock_queue_add.called
     assert resp.status_code == 401
-    assert resp.json() == {"error_message": "Supplied token is invalid", "error_slug": "INVALID_TOKEN"}
+    assert resp.json() == {
+        "detail": [
+            {
+                "msg": "Authentication failed",
+                "type": "Unauthorized",
+            }
+        ]
+    }
 
 
 @mock.patch("boreas.security.load_secrets", return_value="test-token")
@@ -26,5 +33,5 @@ def test_post_malformed_json(mock_queue_add, mock_load_secrets, client, transact
     resp = client.post("/retailers/test-retailer/transactions", json="fddfdffd", headers={"x-api-key": "test-token"})
     mock_load_secrets.assert_called_with("test-retailer-transactions-api-key")
     assert not mock_queue_add.called
-    assert resp.status_code == 400
-    assert resp.json() == {"error_message": "Invalid JSON", "error_slug": "MALFORMED_REQUEST"}
+    assert resp.status_code == 422
+    assert resp.json() == {"detail": [{"loc": ["body"], "msg": "value is not a valid list", "type": "type_error.list"}]}
