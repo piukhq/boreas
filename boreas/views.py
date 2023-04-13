@@ -1,5 +1,4 @@
-from fastapi import APIRouter, Depends, FastAPI
-from fastapi.openapi.models import APIKey
+from fastapi import APIRouter, Depends
 from kombu import Connection
 from starlette.responses import JSONResponse
 
