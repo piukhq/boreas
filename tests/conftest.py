@@ -3,7 +3,7 @@ from unittest.mock import Mock
 import pytest
 from fastapi.testclient import TestClient
 
-from boreas.views import app
+from asgi import app
 
 
 @pytest.fixture()

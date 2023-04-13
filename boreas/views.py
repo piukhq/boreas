@@ -9,7 +9,6 @@ from boreas.models import RetailTransaction
 from boreas.security import get_api_key
 from boreas.settings import settings
 
-
 router = APIRouter(
     prefix="/retailers",
     dependencies=[Depends(get_api_key)],
