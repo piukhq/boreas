@@ -1,4 +1,14 @@
-from boreas.views import app
+from fastapi import FastAPI
+
+from boreas import healthcheck, views
+from boreas.exceptions import InvalidTokenError
+from boreas.views import invalid_token_exc_handler
+
+app = FastAPI(title="Retail Transactions API")
+app.include_router(views.router)
+app.include_router(healthcheck.router)
+app.add_exception_handler(InvalidTokenError, invalid_token_exc_handler)
+
 
 if __name__ == "__main__":
     # Use this for debugging purposes only
