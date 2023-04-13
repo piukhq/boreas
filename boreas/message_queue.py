@@ -11,7 +11,7 @@ def _on_error(exc, interval):
 
 
 def add(message: dict, *, retailer_id: str, connection: Connection) -> None:
-    queue_name = f"{retailer_id}-transactions"
+    queue_name = f"{retailer_id}"
     dl_exchange_name = f"{retailer_id}-dl-exchange"
     dl_queue_name = f"{retailer_id}-dl-queue"
     dl_exchange = Exchange(dl_exchange_name, type="fanout")
