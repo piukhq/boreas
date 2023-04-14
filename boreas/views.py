@@ -25,4 +25,4 @@ async def transactions(
 ) -> None:
     with Connection(settings.rabbitmq_dsn, connect_timeout=3) as conn:
         for transaction in transactions:
-            message_queue.add(transaction, retailer_id=retailer_id, connection=conn)
+            message_queue.add(transaction.dict(), retailer_id=retailer_id, connection=conn)
