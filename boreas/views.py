@@ -5,6 +5,7 @@ from starlette.responses import JSONResponse
 from boreas import message_queue
 from boreas.exceptions import InvalidTokenError
 from boreas.models import RetailTransaction
+from boreas.prometheus import counter
 from boreas.security import get_api_key
 from boreas.settings import settings
 
@@ -23,6 +24,7 @@ async def transactions(
     retailer_id: str,
     transactions: list[RetailTransaction],
 ) -> None:
+    counter.labels(merchant_slug=retailer_id).inc()
     with Connection(settings.rabbitmq_dsn, connect_timeout=3) as conn:
         for transaction in transactions:
-            message_queue.add(transaction, retailer_id=retailer_id, connection=conn)
+            message_queue.add(transaction.json(), retailer_id=retailer_id, connection=conn)

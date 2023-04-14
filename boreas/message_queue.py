@@ -1,7 +1,10 @@
 import logging
+from typing import Tuple
 
 import kombu
 from kombu import Connection, Exchange, Queue
+
+from boreas.settings import settings
 
 log = logging.getLogger(__name__)
 
@@ -34,3 +37,17 @@ def add(message: dict, *, retailer_id: str, connection: Connection) -> None:
         routing_key=queue_name,
         declare=[dl_exchange, dl_queue, transactions_queue],
     )
+
+
+def is_available() -> Tuple[bool, str]:
+    status, error_msg = True, ""
+
+    try:
+        with Connection(settings.rabbitmq_dsn, connect_timeout=3) as conn:
+            conn.connect()
+            assert conn.connected
+    except Exception as err:
+        status = False
+        error_msg = f"Failed to connect to queue, err: {err}"
+
+    return status, error_msg
