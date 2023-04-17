@@ -8,7 +8,7 @@ class RetailTransaction(BaseModel):
     payment_card_type: str
     payment_card_first_six: str | None
     payment_card_last_four: str | None
-    amount: int
+    amount: float
     currency_code: str
     auth_code: str
     date: datetime
