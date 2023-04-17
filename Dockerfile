@@ -14,7 +14,6 @@ FROM ghcr.io/binkhq/python:3.10
 WORKDIR /app
 COPY --from=build /src/dist/*.whl .
 COPY --from=build /src/asgi.py .
-COPY --from=build /src/boreas/dlx_consumer.py .
 RUN pip install *.whl && rm *.whl
 
 ENTRYPOINT [ "linkerd-await", "--" ]
