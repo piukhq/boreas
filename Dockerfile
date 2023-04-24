@@ -18,4 +18,4 @@ COPY --from=build /src/boreas/dlx_consumer.py .
 RUN pip install *.whl && rm *.whl
 
 ENTRYPOINT [ "linkerd-await", "--" ]
-CMD ["uvicorn", "asgi:app", "--host", "0.0.0.0", "--port", "8001"]
+CMD ["sh", "-c", "uvicorn asgi:app --host 0.0.0.0 --port 8001 & uvicorn asgi:app --host 0.0.0.0 --port 9100"]
