@@ -1,8 +1,7 @@
 import logging
 from typing import Tuple
 
-import kombu
-from kombu import Connection, Exchange, Queue
+from kombu import Connection, Queue
 
 from boreas.settings import settings
 
