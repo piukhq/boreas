@@ -1,5 +1,5 @@
+"""Message queue module."""
 import logging
-from typing import Tuple
 
 from kombu import Connection, Queue
 
@@ -8,15 +8,16 @@ from boreas.settings import settings
 log = logging.getLogger(__name__)
 
 
-def _on_error(exc, interval):
-    log.warning(f"Failed to connect to RabbitMQ: {exc}. Will retry after {interval:.1f}s...")
+def _on_error(exc: str, interval: int) -> None:
+    log.warning("Failed to connect to RabbitMQ", extra={"err": exc, "retry_in": interval})
 
 
 def add(message: dict, *, retailer_id: str, connection: Connection) -> None:
+    """Add a message to the queue."""
     queue_name = f"tx-{retailer_id}-harmonia"
     transactions_queue = Queue(queue_name)
     connection.ensure_connection(
-        errback=_on_error, max_retries=3, interval_start=0.2, interval_step=0.4, interval_max=1, timeout=3
+        errback=_on_error, max_retries=3, interval_start=0.2, interval_step=0.4, interval_max=1, timeout=3,
     )
     producer = connection.Producer(serializer="json")
     producer.publish(
@@ -27,15 +28,13 @@ def add(message: dict, *, retailer_id: str, connection: Connection) -> None:
     )
 
 
-def is_available() -> Tuple[bool, str]:
-    status, error_msg = True, ""
-
+def is_available() -> bool:
+    """Check if the message queue is available."""
+    status = False
     try:
         with Connection(settings.rabbitmq_dsn, connect_timeout=3) as conn:
             conn.connect()
-            assert conn.connected
+            status = True
     except Exception as err:
-        status = False
-        error_msg = f"Failed to connect to queue, err: {err}"
-
-    return status, error_msg
+        log.exception("Failed to connect to queue", extra={"err": err})
+    return status

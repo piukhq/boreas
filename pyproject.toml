@@ -9,37 +9,40 @@ description = ""
 authors = ["Michal Jozwiak <mjozwiak@bink.com>"]
 readme = "README.md"
 
+[tool.poetry.scripts]
+boreas = "boreas.cli:cli"
+
 [tool.poetry.dependencies]
 python = "^3.11"
-fastapi = "^0.94.1"
-uvicorn = "^0.21.0"
-pydantic = "^1.10.6"
-kombu = "^5.2.4"
-azure-identity = "^1.12.0"
-azure-keyvault-secrets = "^4.6.0"
-tenacity = "^8.2.2"
-httpx = "^0.23.3"
-prometheus-client = "^0.16.0"
+fastapi = "^0.104.1"
+uvicorn = "^0.24.0.post1"
+kombu = "^5.3.3"
+azure-identity = "^1.15.0"
+azure-keyvault-secrets = "^4.7.0"
+tenacity = "^8.2.3"
+httpx = "^0.25.1"
+prometheus-client = "^0.18.0"
+sentry-sdk = "^1.34.0"
+click = "^8.1.7"
+pydantic-settings = "^2.0.3"
 
 [tool.poetry.group.dev.dependencies]
-black = "^23.7.0"
-ruff = "^0.0.278"
-mypy = "^1.4.1"
-pytest = "^7.4.0"
+ruff = "^0.1.4"
+mypy = "^1.6.1"
+pytest = "^7.4.3"
 pytest-cov = "^4.1.0"
-xenon = "^0.9.0"
+xenon = "^0.9.1"
 
 [tool.poetry-dynamic-versioning]
 enable = true
 vcs = "git"
 style = "semver"
 
-[tool.black]
-line-length = 120
-
 [tool.ruff]
-select = ["I001"]
+select = ["ALL"]
+ignore = ["ANN102", "D203", "D213","TCH001"]
 line-length = 120
+exclude = ["tests/*"]
 
 [tool.mypy]
 ignore_missing_imports = true
