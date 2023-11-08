@@ -17,7 +17,12 @@ def add(message: dict, *, retailer_id: str, connection: Connection) -> None:
     queue_name = f"tx-{retailer_id}-harmonia"
     transactions_queue = Queue(queue_name)
     connection.ensure_connection(
-        errback=_on_error, max_retries=3, interval_start=0.2, interval_step=0.4, interval_max=1, timeout=3,
+        errback=_on_error,
+        max_retries=3,
+        interval_start=0.2,
+        interval_step=0.4,
+        interval_max=1,
+        timeout=3,
     )
     producer = connection.Producer(serializer="json")
     producer.publish(
@@ -32,7 +37,7 @@ def is_available() -> bool:
     """Check if the message queue is available."""
     status = False
     try:
-        with Connection(settings.rabbitmq_dsn, connect_timeout=3) as conn:
+        with Connection(str(settings.rabbitmq_dsn), connect_timeout=3) as conn:
             conn.connect()
             status = True
     except Exception as err:

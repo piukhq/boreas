@@ -32,4 +32,5 @@ def cli(host: str, port: int, reload: bool) -> None:  # noqa: FBT001
     """Run a Boreas Server."""
     uvicorn.run("boreas.app:create_app", host=host, port=port, reload=reload)
 
+
 cli(max_content_width=120)

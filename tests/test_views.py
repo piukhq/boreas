@@ -34,4 +34,14 @@ def test_post_malformed_json(mock_queue_add, mock_load_secrets, client, transact
     mock_load_secrets.assert_called_with("test-retailer-transactions-api-key")
     assert not mock_queue_add.called
     assert resp.status_code == 422
-    assert resp.json() == {"detail": [{"loc": ["body"], "msg": "value is not a valid list", "type": "type_error.list"}]}
+    assert resp.json() == {
+        "detail": [
+            {
+                "type": "list_type",
+                "loc": ["body"],
+                "msg": "Input should be a valid list",
+                "input": "fddfdffd",
+                "url": "https://errors.pydantic.dev/2.4/v/list_type",
+            }
+        ]
+    }

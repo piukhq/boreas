@@ -31,6 +31,6 @@ async def transactions(
 ) -> None:
     """Receive a list of transactions from a retailer."""
     counter.labels(merchant_slug=retailer_id).inc()
-    with Connection(settings.rabbitmq_dsn, connect_timeout=3) as conn:
+    with Connection(str(settings.rabbitmq_dsn), connect_timeout=3) as conn:
         for transaction in transactions:
-            message_queue.add(transaction.dict(), retailer_id=retailer_id, connection=conn)
+            message_queue.add(transaction.model_dump(), retailer_id=retailer_id, connection=conn)
