@@ -41,7 +41,6 @@ class RetailTransaction(BaseModel):
             raise ValueError(msg)
         return v
 
-    # I think Pydantic is already validating this, but leaving here for consistency
     @validator("transaction_id", "payment_card_type", "currency_code", "auth_code")
     @classmethod
     def string_must_not_be_blank(cls, v: str | None) -> str | None:
