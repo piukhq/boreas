@@ -21,5 +21,7 @@ async def metrics() -> None:
         registry = CollectorRegistry()
         multiprocess.MultiProcessCollector(registry)
     return Response(
-        headers={"Content-Type": CONTENT_TYPE_LATEST}, content=generate_latest(registry), status_code=HTTP_200_OK,
+        headers={"Content-Type": CONTENT_TYPE_LATEST},
+        content=generate_latest(registry),
+        status_code=HTTP_200_OK,
     )

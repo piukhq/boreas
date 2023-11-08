@@ -24,6 +24,7 @@ def load_secrets(secret_name: str) -> str:
     kv_client = SecretClient(vault_url=settings.keyvault_uri, credential=kv_credential)
     return kv_client.get_secret(secret_name).value
 
+
 async def get_api_key(retailer_id: str, api_key_header: str = Security(api_key_header)) -> str | InvalidTokenError:
     """Check the API Key in the request header matches the one in Azure Key Vault."""
     if api_key_header == load_secrets(f"{retailer_id}-transactions-api-key"):
