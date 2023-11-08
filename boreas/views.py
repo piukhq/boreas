@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request
 from kombu import Connection
 from starlette.responses import JSONResponse
 
@@ -19,7 +19,7 @@ router = APIRouter(
 )
 
 
-async def invalid_token_exc_handler(exc: InvalidTokenError) -> JSONResponse:
+async def invalid_token_exc_handler(request: Request, exc: InvalidTokenError) -> JSONResponse:  # noqa: ARG001
     """Response for exceptions raised by the API Key security dependency."""
     return JSONResponse(status_code=exc.status_code, content=exc.content)
 
