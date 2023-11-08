@@ -8,7 +8,7 @@ from boreas.settings import settings
 log = logging.getLogger(__name__)
 
 
-def _on_error(exc: str, interval: int) -> None:
+def _on_error(exc: Exception, interval: int) -> None:
     log.warning("Failed to connect to RabbitMQ", extra={"err": exc, "retry_in": interval})
 
 

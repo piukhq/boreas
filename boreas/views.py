@@ -21,7 +21,6 @@ router = APIRouter(
 
 async def invalid_token_exc_handler(exc: InvalidTokenError) -> JSONResponse:
     """Response for exceptions raised by the API Key security dependency."""
-    # This is returning an exception as a response, which is not ideal, consider better messaging.
     return JSONResponse(status_code=exc.status_code, content=exc.content)
 
 
