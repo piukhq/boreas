@@ -1,4 +1,3 @@
-"""Run the Boreas Application."""
 import sentry_sdk
 from fastapi import FastAPI
 
@@ -9,8 +8,9 @@ from boreas.views import invalid_token_exc_handler
 
 
 def create_app() -> FastAPI:
-    """Create a FastAPI application."""
-    sentry_sdk.init(dsn=settings.sentry_dsn, environment=settings.sentry_environment)
+    if settings.sentry_dsn:
+        sentry_sdk.init(settings.sentry_dsn, environment=settings.sentry_environment)
+
     app = FastAPI(title="Retail Transactions API")
 
     app.include_router(views.router)

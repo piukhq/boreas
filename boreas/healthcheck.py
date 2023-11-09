@@ -1,7 +1,5 @@
-"""Healthcheck endpoints for the Boreas API."""
-
 from fastapi import APIRouter
-from starlette.responses import Response
+from starlette.responses import JSONResponse, Response
 from starlette.status import HTTP_200_OK, HTTP_204_NO_CONTENT, HTTP_500_INTERNAL_SERVER_ERROR
 
 from boreas.message_queue import is_available
@@ -11,14 +9,23 @@ router = APIRouter()
 
 @router.get("/readyz")
 async def readyz() -> None:
-    """Healthcheck: Return a HTTP 200 OK response if the message queue is available."""
     queue_available = is_available()
-    if not queue_available:
-        return Response(status_code=HTTP_500_INTERNAL_SERVER_ERROR)
-    return Response(status_code=HTTP_200_OK)
+    if queue_available[0]:
+        return Response(status_code=HTTP_200_OK)
+    else:
+        return JSONResponse(
+            status_code=HTTP_500_INTERNAL_SERVER_ERROR,
+            content={
+                "detail": [
+                    {
+                        "msg": queue_available[1],
+                        "type": "Internal Server Error",
+                    }
+                ]
+            },
+        )
 
 
 @router.get("/livez")
 async def livez() -> None:
-    """Healthcheck: Immediately return a HTTP 204 No Content response."""
     Response(status_code=HTTP_204_NO_CONTENT)

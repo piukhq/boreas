@@ -1,8 +1,4 @@
-"""Views for the Boreas API."""
-
-from __future__ import annotations
-
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends
 from kombu import Connection
 from starlette.responses import JSONResponse
 
@@ -19,8 +15,7 @@ router = APIRouter(
 )
 
 
-async def invalid_token_exc_handler(request: Request, exc: InvalidTokenError) -> JSONResponse:  # noqa: ARG001
-    """Response for exceptions raised by the API Key security dependency."""
+async def invalid_token_exc_handler(request, exc: InvalidTokenError):
     return JSONResponse(status_code=exc.status_code, content=exc.content)
 
 
@@ -29,7 +24,6 @@ async def transactions(
     retailer_id: str,
     transactions: list[RetailTransaction],
 ) -> None:
-    """Receive a list of transactions from a retailer."""
     counter.labels(merchant_slug=retailer_id).inc()
     with Connection(str(settings.rabbitmq_dsn), connect_timeout=3) as conn:
         for transaction in transactions:
