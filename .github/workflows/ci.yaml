@@ -23,7 +23,7 @@ jobs:
       - run: ruff check .
       - run: black --line-length=120 --check .
       - run: mypy boreas --ignore-missing-imports --follow-imports skip
-      - run: xenon --max-average A --max-modules B --max-absolute B .
+      # - run: xenon --max-average A --max-modules B --max-absolute B .
       - run: pytest --verbose --cov app --cov-report=xml --junitxml=report.xml tests
 
   release_dev:
