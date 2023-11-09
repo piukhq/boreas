@@ -1,6 +1,6 @@
 [build-system]
 requires = ["poetry-core", "poetry-dynamic-versioning"]
-build-backend = "poetry_dynamic_versioning.backend"
+build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "boreas"
@@ -35,8 +35,6 @@ xenon = "^0.9.1"
 
 [tool.poetry-dynamic-versioning]
 enable = true
-vcs = "git"
-style = "semver"
 
 [tool.ruff]
 select = ["ALL"]
