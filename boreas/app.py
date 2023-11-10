@@ -9,7 +9,7 @@ from boreas.views import invalid_token_exc_handler
 
 def create_app() -> FastAPI:
     if settings.sentry_dsn:
-        sentry_sdk.init(settings.sentry_dsn, environment=settings.sentry_environment)
+        sentry_sdk.init(str(settings.sentry_dsn), environment=settings.sentry_environment)
 
     app = FastAPI(title="Retail Transactions API")
 
