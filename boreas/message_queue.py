@@ -8,6 +8,16 @@ from boreas.settings import settings
 log = logging.getLogger(__name__)
 
 
+_conn: Connection | None = None
+
+
+async def queue_connection() -> Connection:
+    global _conn
+    if _conn is None:
+        _conn = Connection(str(settings.rabbitmq_dsn), connect_timeout=3)
+    return _conn
+
+
 def _on_error(exc, interval):
     log.warning(f"Failed to connect to RabbitMQ: {exc}. Will retry after {interval:.1f}s...")
 
