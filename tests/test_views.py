@@ -1,3 +1,4 @@
+import typing
 from unittest import mock
 
 
@@ -41,7 +42,10 @@ def test_post_malformed_json(mock_queue_add, mock_load_secrets, client, transact
                 "loc": ["body"],
                 "msg": "Input should be a valid list",
                 "input": "fddfdffd",
-                "url": "https://errors.pydantic.dev/2.4/v/list_type",
+                "url": mock.ANY,
             }
         ]
     }
+    url = resp.json()["detail"][0]["url"]
+    assert url[:28] + url[31:] == "https://errors.pydantic.dev//v/list_type"
+    assert float(url[28:31])
