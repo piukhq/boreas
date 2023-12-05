@@ -47,5 +47,5 @@ def test_post_malformed_json(mock_queue_add, mock_load_secrets, client, transact
         ]
     }
     url = resp.json()["detail"][0]["url"]
-    assert url[:28] + url[31:] == "https://errors.pydantic.dev//v/list_typ"
+    assert url[:28] + url[31:] == "https://errors.pydantic.dev//v/list_type"
     assert float(url[28:31])
