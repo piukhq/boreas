@@ -1,4 +1,4 @@
-FROM ghcr.io/binkhq/python:3.11-poetry as build
+FROM ghcr.io/binkhq/python:3.11 as build
 WORKDIR /src
 
 RUN pip install poetry
@@ -15,5 +15,4 @@ WORKDIR /app
 COPY --from=build /src/dist/*.whl .
 RUN pip install *.whl && rm *.whl
 
-ENTRYPOINT [ "linkerd-await", "--" ]
 CMD ["uvicorn", "boreas.app:create_app", "--host=0.0.0.0", "--port=6502"]
