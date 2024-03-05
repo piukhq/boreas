@@ -1,6 +1,7 @@
 FROM ghcr.io/binkhq/python:3.11 as build
 WORKDIR /src
 
+RUN apt update && apt -y install git
 RUN pip install poetry
 RUN poetry config virtualenvs.create false
 RUN poetry self add poetry-dynamic-versioning[plugin]
